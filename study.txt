@@ -1,0 +1,334 @@
+before triggers>save to database>after triggers > workflow rules > system validation rules >before update triggers and after update triggers, regardless of the record operation (insert or update), one more time......... is the order of execution from official document https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm.
+It doesn't says anything about trigger running after process builder where process is updating a record and is in 'created and every time edited'
+
+
+
+https://quizlet.com/518929131/salesforce-javascript-developer-certfication-flash-cards/    dmohammad
+
+1)how to reference lwc component in page layout
+2)what is the db time for trigger salesforce
+3)is db time included in CPU time
+4)which error occurs during inserting records for which user does not have permission 
+5)what are mixed DML and how to avoid mixed dml error in salesforce
+6)Decorators in LWC.
+7)can we make callouts using @api? how to make callouts using @api lwc?
+8)how to reference grandchild component in parent
+9)is Case a sales cloud object? is yes why if No why?
+10)if we have a process builder and a trigger on same object updating same field. Say we have initial value as open, process builder is updating the value to 'progress' and the trigger is updating the value to 'closed' then what will the final value in the field?
+
+
+handson JS,vue JS,  batch, triggers, vue JS --- salesforce data kaise bhejna ho, modify data curd operation, beautify, change format of json	
+
+3 tables se data lena h without using relations
+
+big object?
+
+1 record in salesforce = 2 KB(see in storage usage from SETUP)
+soql/sosl stmt cannot exceed 10,000 characters
+soql query can't run more than 120 seconds
+soql query can be order by 32 fields
+
+admin superset
+app builder superset
+
+For production instances, https://login.salesforce.com/services/Soap/c/xx.0/0DF300000000xxS
+For sandbox instances, https://test.salesforce.com/services/Soap/c/xx.0/0DF300000000xxS 
+Or, if MyDomain is enabled on the org, you can use,  https://MyDomain.my.salesforce.com/services/Soap/c/xx.0/0DF300000000xxS 
+
+https://danishpractice.my.salesforce.com/services/data/v51.0/query/?q=SELECT+Name+From+Account
+
+https://trailblazers.salesforce.com/answers?id=9064S000000CnECQA0#!/feedtype=SINGLE_QUESTION_DETAIL&dc=Additional_Products&criteria=OPENQUESTIONS&id=9064S000000kJ5pQAE
+https://salesforce.stackexchange.com/questions/128846/visualforce-compile-time-error-when-using-vue-js-v-onclick-directive
+
+https://www.crsinfosolutions.com/61-lwc-lightning-web-component-interview-questions/
+https://www.crsinfosolutions.com/50-lwc-lightning-web-component-interview-questions-part-1/
+https://www.crsinfosolutions.com/155-salesforce-interview-questions-with-answers-latest/
+http://amitsalesforce.blogspot.com/2019/10/lightning-datatable-in-lightning-web-component.html
+
+  
+  https://www.linkedin.com/pulse/how-develop-salesforce-visualforce-pages-using-vuejs-dmitry-kardashov/
+  https://www.vuemastery.com/courses-path/beginner-vue-2
+  
+  
+dmohammad9630@mindful-wolf-8y1x0j.com
+India@12
+
+platform events
+methods in set but not in list vice versa
+methods in map=
+access grand parent in lwc
+create data from apex and render on lwc
+
+outbound message
+lookup trigger
+
+controller for : get 10 account records and add contacts where contact name starting with 'A'
+
+
+acc 
+
+counter index 0-9
+
+check if contact name is starting with 'a'
+account[index] -- add contact
+
+client is not having the email to case functionality, what is the work around
+how to avoid mixed dml in test class
+--------------------------------------------
+@wire and wire services, life cycle events, get record etc , LDataS, forms edit, template - conditional, communication bt parent child, aura/vf -- lwc, configurable lwc admin kaise kr skta h, quick action se lwc -record detail page k andar, limitation---list views k andar ni use kr skte, lightning out se lwc callout, event calls
+
+
+asynchronous java script,  
+--------------------------------------------
+can we extend all classes in apex?
+can constructor be static? can it be private?
+10,000 records in one traction?
+can we have try without catch? use of finally? can finally be use without try-catch
+inherited sharing 
+---------------------------------------------
+what can we do edit forms apart from edit?
+pass value to child using connectedcallback
+limitations of workflows -- how many emails/task etc we can do 
+can we call static method from non-static method? vice versa?
+
+---------------------------------------------
+
+what is maximum size of list?
+
+1 soql returns 50,000 records, what will happen if we have 3 soql on 3 different objects will all will have 50k records?
+trigger on 3 object with same fuction, can we store this common structure to avoid creating same code for all 3 objects?	
+---------------------------------------------
+difference between custom setting and named credentials
+'get all' method for metadata
+---------------------------------------------
+how can we share records of employees under one manager with another
+validation rule of amount > 1000, workflow rule to set value to 4000, process builder to set value to 5000. from UI updating value to 500 what will happen?
+connected apps
+process records more than 50 million in batch
+create 2 buttons on LWC - on click of button 1 show all records, on button 2 show records i have access to.
+what level of security is enforced by with and without sharing- object/record/field?
+run particular piece of code in user context -- not in test class.
+---------------------------------------------
+asynchronous trigger --- onchange event
+---------------------------------------------
+case is getting close, check if its parent is open > parent should get close if all childs are closed
+---------------------------------------------
+access from hierarchy custom settings
+entitlement, dynamic forms, considerations while changing from classic to lightning
+how to access record type in apex, how to share records to a group of 9000 people using sharing rules, profile has view all modify all but im not able to see field,
+changing from master detail - lookup, 
+
+insert account and contact in a single query
+
+<lightning-input data-name=“test” onchange={handleChange}></lightning-input>
+
+{Name}
+
+
+ 
+ @track Name;
+ 
+ handleChange(event){
+   this.Name = event.target.datasetName;
+   
+ }
+ 
+ 
+ 
+ 
+List<Account> listOfAccount = new List<Account>();
+
+
+
+Account newAccontRecord = new Account();
+
+newAccontRecord.Name = ‘Tom Account';
+
+listOfAccount.add(newAccontRecord);
+
+
+
+newAccontRecord.Name = ‘Jerry Duplicate Account';
+
+listOfAccount.add(newAccontRecord);
+
+
+
+if (!listOfAccount.isEmpty()) {
+
+        insert listOfAccount;
+
+}
+
+
+
+
+
+compa --- connected callbakc
+compb
+compc
+
+
+
+a.html
+<c-b chilbvar={name}></c-b>
+<c-c chilcvar={name}></c-c>
+
+
+
+a.js
+ 
+  name;
+  
+ connectedCallback(){
+    name = 'from Parent';
+   
+ }
+ 
+ 
+ 
+b.html
+  {chilbvar}
+b.js
+  @api chilbvar;
+
+c.html
+ {chilcvar;}
+c.js
+ @api chilcvar;
+ 
+ 
+ 
+ ------
+Create Custom field called “Number of Locations” on the Account Object (Data Type=Number) (NumOfLocations__c)
+
+    Write a  trigger that creates the number of contacts which are equal to the number which we will enter in the Number of Locations field on the Account Object
+	
+   
+   trigger 
+salesforce inspector
+------------------------------------------
+public class BatchTest implements Database.Batchable<sObject> {
+  public Database.querylocator Start(BatchableContext bc){
+   return Database.querylocator;
+  }
+  public void execute{BatchableContext bc, List<sObject> scope}
+  public void finish(BatchableContext bc)
+  
+}
+
+
+phone field on opportunity, update on opportunity,  -> update related account and contact
+
+trigger updtPhone on Opportunity(after update)
+{
+  if(trigger.isAfter && trigger.isUpdate){
+    handlerclass.handleuptd(newMap);
+  }
+
+}
+
+
+public class handlerclass(){
+ public static void handleuptd(Map<Id,opportunity> newMap){
+ 
+   Map<Id,Id> idmap = new Map<Id,id>();
+    for(Id oppsId : newMap.keySet()){
+    if(oppsId.AccountId != null ){
+	  idmap.put(oppsId.AccountId, oppsId);
+	}
+  }
+  
+  Account[] accfromDB = [select Id, Phone, (SELECT id, Phone from contacts) From Account where Id IN : idmap.keySet()];
+  Account[] acctoupdt = new List<Account>();
+  Contact[] consTouptd = new List<Contact>();
+   for(Account acc: accfromDB){
+     acc.Phone = newmap.get(idmap.get(acc.Id)).Phone;
+	 acctoupdt.add(acc);
+	 contact[] ct = acc.contacts;
+	 if(ct.size() > 0){
+	   for(contact con : ct){
+	     con.Phone = acc.Phone;
+		 consTouptd.add(con);
+	   }
+	 }
+	 
+   }
+   if(acctoupdt.size() > 0){
+     try{
+	   update(acctoupdt);
+
+	 }
+	 
+	 catch(Exception e){
+	  sytem.debug(e);
+	 }
+   }
+   
+   if(consTouptd.size() >0 ){
+   try{
+	update(consTouptd)
+
+	 }
+	 
+	 catch(Exception e){
+	  sytem.debug(e);
+	 }
+   }
+  
+ }
+}
+-------------------------------------------------
+
+1:account can have multiple contact
+field on long text(relEmails__c) on account ---- having email ids of associated contact separated by ;
+
+
+trigger emailUpdt on Contact(after insert, after update, after delete, after undelete){
+  system.debug('Hello');
+  contact[] ctlist =  new List<Contact>();
+  //prepared a list to contacts to process/coming from trigger
+  if(trigger.isInsert || trigger.isUndelete){
+    ctlist = trigger.new;
+  }
+  if(trigger.isDelete){
+        ctlist = trigger.old;
+  }
+  
+  if(for update){
+    if contact id present in ctlist, do nothing
+	else add contact to ctlist
+  }
+  accIds = (get the IDs from ctlist
+  
+  Account[] accToUpdt = [select Id, relEmails__c, (Select Id,Email from contacts) from Account where Id IN : accIds ];
+  
+  
+  for(Account acc:accToUpdt ){
+    Contact[] relatedCts = acc.contacts;
+	for(Contact ct : relatedCts ){
+	  acc.relEmails__c = (String) ct.email + ';';
+	  remove extra ';' from last
+	  
+	}
+	
+  }
+  
+  if()
+  
+  
+}
+
+500 500
+200 --- 2 times
+200 --- 2 times -- 2 times
+
+100 insert --- 1
+100 update --- 1 -- 1
+3-- 
+200 - batch
+
+
+12,15,20,25,34,38,57
+
+

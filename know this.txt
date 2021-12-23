@@ -1,0 +1,260 @@
+---------------------
+Relationships
+---------------------
+1:1, 1: many, many:many
+
+* 1:many master detail and lookup
+* relationship field is always created on child
+------------------------
+------------------------
+Profile(Read+Edit) + Permission set(Read + Delete) = read,edit,delete
+=> edit permission is not present in permission set but it will be given from profile. Hence if more restrictive permission set is assigned to a user
+then the permission from the profile will still be there. permission set DOES NOT REMOVE permissions.
+
+we cannot control page layout assignments in permission set. Record types can be controlled by both. permission sets defined without license dont
+include all possible permissions and settings
+
+If the user is NOT ACTIVE, permission sets will not get assigned
+
+---------------------
+Field level security
+---------------------
+see and edit value of field of an object. we can only give read,edit permissions. If Read permission checkbox is not checked then will not be
+able to SEE
+
+scenario: if we want to hide some fields, we will create 2 page layouts(LIMITED TO DETAIL and EDIT PAGE of that RECORD only), assign these 
+to different profiles. That will control only 'detail page' and 'edit page' of a RECORD. IT WILL NOT CONTROL LIST VIEW, SEARCH RESULTS, Reports,
+RELATED LIST or on VF PAGE.
+
+can be implemented at : profile level and permission set level
+
+FIELD ACCESSIBILITY: set field permissions for different 'profiles' on a single page
+
+* universally required field -- can't change FLS
+* If a field is hidden and it is being used in rollup summary or formula field, then it will not affect the calculations for both of them
+
+---------------------
+Record Level Security
+---------------------
+3 access level : public read/write, public read only, private
+
+* object level and record level security determines the user's access to record.
+* the MOST RESTRICTIVE of both of them WINS.
+
+The general way in which access OPEN UP ::::: OWD < role hierarchy < sharing rules < manual sharing
+
+ROLE hierarchy uses ::: managers can see data of subordinated, users who tend to need access to same type of records can be grouped together 
+* have to check checkbox 'grant access using role hierarchy' for custom objects. it is enable BY DEFAULT for standard objects we cant change that.
+
+SHARING rule: owner based, criterion based
+* objects which are on detail side for master details relationship sharing rules cannot be created
+* once sharing rule is created, it is fired in background for recalculation of access. Once done, we get email
+
+Manual sharing
+* 4 types of people can share records manually -
+         - record owner
+		 - user above in the role hierarchy
+		 - user granted "full access" to the record
+		 - admin
+* granting access to records in master detail relationship grantes access to associated records
+* in case of OWD 'public read/write" the sharing button WILL NOT be available
+
+------------------------------------------------
+tools to configure Code -- Admin configurability
+------------------------------------------------
+custom Labels -- single field values, text data only, unable to edit via apex
+custom Settings -- called as flat objects, use for storing static data, already in application cache, 2 types list(Provided as map to apex) 
+				   and hierarchy(accessible from formulas and workflow rules). Editable via apex
+                   deploy object but no data
+custom metdata -- need to query then it is cached in application after first read. Desinged for the ease in deployment of object along with  
+                  data(data is not moved otherwise in deployment to other environments). Does NOT count towards limits. Not editable in apex but via API
+				  
+------------------------------------------------
+BUBBLE AND COMPOSED PROPERTY
+
+bubble false, composed false --- a notify event will fire only the childEvent
+bubble true, composed false --- fires parentEvent then childEvent. 
+bubble false, composed true --- UNDEFINED Behaviour. Not supported configuration
+bubble true, composed true --- fires childEvent then parentEvent
+==================================================
+* instance(sandboxes) vs org 
+* migrate data from one org to another with master detail in them
+
+dataloaded- developed by salesforce - for data migration(one instance/org to different) {intance is of same org}
+
+production - live data
+multiple instance - sandboxes
+type of sandboxes:
+  full copy - use for QA
+  Partial - (NXT,UXT, NXTDR) developement
+
+UXT - developer org used for developement
+
+NXT - 
+NXTDR - 
+
+we develop in UXT test in NXTDR
+
+scripts
+metadata
+data
+
+to migrate scripts and metadata
+  changeset 
+  metadata migration tool/ant/component migration tool/ using  - package.xml
+  
+to migrate data
+  data import wizard or data loader
+  
+  
+  
+  
+  
+  
+  
+------------------------------------------------- 
+What to do if the lookup record is deleted?	
+	Clear the value of this field. You can't choose this option if you make this field required.
+	Don't allow deletion of the lookup record that's part of a lookup relationship.
+-------------------------------------------------
+
+	Whenever we enable 'Re-evaluate Workflow Rules after Field Change' checkbox in the Field Update of a workflow rule, due to this field update other workflow rules on the same object will be fired if the entry criteria of those workflow rules satisfied.
+
+	Incase, in other workflow rules also if we enable 'Re-evaluate Workflow Rules after Field Change' checkbox in the Field Update recursive workflow 	rules will come in some scenarios.
+
+We can take two steps to avoid recursive workflow rules -
+
+	For the workflow Evaluation Criteria if you choose created, and any time it’s edited to subsequently meet criteria option, we can avoid recursive workflow rules.
+	If you don't enable Re-evaluate Workflow Rules after Field Change checkbox in the Field Update of a workflow rule we can avoid.
+
+--------------------------
+Mixed DML
+
+	Whenever you are getting this error it means that two Sobjects(setup & non-setup) that your using in your code can not mix during the same transactions.To avoid this use the the System.runAs block or the @ future method.
+-------------------------
+Common errors ---- https://www.mstsolutions.com/technical/errors-in-salesforce/
+
+1.Mixed DML Operation Error: 
+
+	Reason: When you try to combine DML operations for both Setup and Non-Setup objects in a same transaction (Where Setup objects such as Group, Group member, Queue SObject, User. Non-Setup Objects such as Standard and Custom Objects). 
+
+	Resolution: We can use @future annotation to do DML operation. It will split the transactions. We can shift DML operations of a particular kind in the Future scope. Since both the DML operations are isolated from each other, the transaction doesn’t fail
+
+	Another approach is to use same logic in a batch class to overcome.
+
+2.Cpu time limit exceed: 
+
+	Reason 1: Based on CPU usage, Salesforce has a timeout limit for each transaction. Due to consumption of too much CPU time limit in a transaction, this error could occur.
+
+	Reason 2: If you use nested for-loop (for-loop inside another for-loop), then you must use Map(s) to resolve the issue, as it is one of the common reasons for CPU Time Limit
+
+Too many SOQL Queries: 101
+
+	Reason: We can run up to a total of 100 SOQL queries in a single transaction or context. All the SOQL queries in triggers fired from one call or context will be counted against the limit of 100.  When the number of SOQL queries exceed the limit in a single transaction, then this error is thrown by Salesforce.
+
+	Resolution: To fix this issue, you’ll need to change your code in such a way that the number of SOQL fired is less than 100. If you need to change the context, then you can use @future annotation which will run the code asynchronously. Here are some best practices that will stop the error messages.
+
+Too many Query rows: 
+
+	Reason:  The exception is being thrown because the maximum number of rows we can return in SOQL calls in Apex is 50000.
+
+	Resolution: Limit the query results by adding limit. If you want to insert additionally, you will need to use Batch Apex in which the 50K limit counts per batch execution. This limit Counts for each transaction and these limits are reset for each execution of a batch of records in the execute method.
+
+7. Error: System.ListException: List index out of bounds: 0
+
+	Reason: Our Query has returned no records that match the criteria. If you then attempt to access an element at row 0, this will throw an error as that row doesn’t exist.
+
+	Resolution: Initially Always Check whether the list has records or not.
+
+8. Error: Sobject row was retrieved via SOQL without querying the requested field:
+
+	Reason: This Error is caused by using the field that is not queried in the SOQL query.
+
+	System.QueryException: List has no rows for assignment to SObject:
+
+	Reason: This error is caused when the query cannot get the results back.
+
+15. .Error: Record is Read only:
+
+	Reason: When you are doing an After trigger, Trigger.new is read only. If you want to make changes to it, then it is best to do it in a Before trigger.
+
+	Also, your trigger is not bulkified. If more than one record is updated at a time, then only the first one will be evaluated. 
+
+-------------------------------
+
+Apex annotations
+
+Apex supports the following annotations.
+	@AuraEnabled
+	@Deprecated
+	@Future
+	@InvocableMethod
+	@InvocableVariable
+	@IsTest
+	@JsonAccess
+	@NamespaceAccessible
+	@ReadOnly
+	@RemoteAction
+	@SuppressWarnings
+	@TestSetup
+	@TestVisible
+	Apex REST annotations:
+	@ReadOnly
+	@RestResource(urlMapping='/yourUrl')
+	@HttpDelete
+	@HttpGet
+	@HttpPatch
+	@HttpPost
+	@HttpPut
+------------------------------
+trigger 
+  trigger,batch,future, callouts using future
+batch
+  batch, we can define a web service having a future method invocation and call the web service from the execute method of Batch Job, allowscallout
+future
+  callouts
+  future methods don’t return an ID, so We can’t trace it directly. We can use another filter such as MethodName, or JobType, to find the required job.
+queable
+   1 future call
+   
+=====================================================================
+integration:
+  if external/third party system has capability to integrate with salesforce: we have to create a connected app in salesforce.
+      - we expose standard APIs(ismei custom and standard object dono k lie cover ho jaata h)
+	  - we create apex rest resource - jismei http methods hote h DELETE, GET, PATCH, POST, PUT
+  
+  if external/third party system DOESN'T have capability to integrate with salesforce: we DO NOT create any connected app in salesforce.
+      - we do apex callouts. username/password stored in named credentials - JSON.serialize and ye sab btana hai
+	  
+	  
+=====================================================================
+
+SELECT Id,(SELECT Name from Child_rel__r) FROM Parent_Object__c  get relatioship name from -- child object > lookup field -- Child Relationship Name __r
+SElect Parent__r.Name, Id from Child_Object__c get relatioship name from -- child object > lookup field -- Field Name__r
+=====================================================================
+Limitations of @InvocableMethod Annotation:
+
+	Invocable method will not accept more than one argument as a method parameter
+	Only static methods can be invocable methods
+	More than one invocable method is not allowed per class
+=====================================================================	  
+how to avoid mixed dml exception in Salesforce test class?
+	Try using "Test.startTest()" and "Test.stopTest()". These break unit test context into two contexts (inside startTest-stopTest and outside)
+	Mixed DML Operations in Test Methods :-
+	The System.runAs block runs in the current user’s context. It creates a test user with a role and a test account, which is a mixed DML operation.
+	The mixed DML exception error is still sometimes returned even if you enclose the code block that performs the mixed DML operations within a System.runAs block. This can occur if the test method calls a future method that performs a DML operation that can’t be mixed with others, such as deleting a group. If you get the mixed DML exception in this case, enclose the code block that makes the future method call within Test.startTest and Test.stopTest statements.
+======================================================================
+ 2^35 nearly equal = (37943543128)|SYSTEM_METHOD_ENTRY|[475]|String.cont*********** MAXIMUM DEBUG LOG SIZE REACHED ***********
+======================================================================
+we cannot do version control using changeset, we cannot delete classes in prod using changeset
+======================================================================
+Custom Metadata and Custom Types Label
+
+   Custom Metadata - 
+      shouldn't count against the limit but there is an exception. When you query a long text area field from a metadata it does counts against the limits, please, check if that is your case.
+
+check the size if trigger.new
+
+  
+      
+	 
